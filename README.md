@@ -1,73 +1,105 @@
-# Build PowerPoint add-ins using Office Add-ins Development Kit
-Project: `e5-project` — sample PowerPoint Office Add-in (repository: https://github.com/a9215461/e5-project)
+# e5-project PowerPoint 加载项
 
-PowerPoint add-ins are integrations built by third parties into PowerPoint by using [PowerPoint JavaScript API](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/overview/powerpoint-add-ins-reference-overview) and [Office Platform capabilities](https://learn.microsoft.com/en-us/office/dev/add-ins/overview/office-add-ins).
+一个使用 Office JavaScript API 的简易 PowerPoint 任务窗格 (Task Pane) 加载项示例。点击界面中的“插入文本”按钮，会在当前选中位置写入带时间戳的字符串，帮助你快速验证加载项的运行与权限配置。
 
-## How to run this project
+## ✨ 功能概览
 
-### Prerequisites
+- 任务窗格 UI（HTML/CSS/JS），自定义按钮与状态区域。
+- 使用 `Office.context.document.setSelectedDataAsync` 向选区写入文本。
+- Webpack 构建与调试脚本，支持开发/生产模式。
+- `manifest.xml` 描述加载项元数据与按钮入口。
 
-- Node.js (the latest LTS version). Visit the [Node.js site](https://nodejs.org/) to download and install the right version for your operating system. To verify that you've already installed these tools, run the commands `node -v` and `npm -v` in your terminal.
-- Office connected to a Microsoft 365 subscription. You might qualify for a Microsoft 365 E5 developer subscription through the [Microsoft 365 Developer Program](https://developer.microsoft.com/microsoft-365/dev-program), see [FAQ](https://learn.microsoft.com/office/developer-program/microsoft-365-developer-program-faq#who-qualifies-for-a-microsoft-365-e5-developer-subscription-) for details. Alternatively, you can [sign up for a 1-month free trial](https://www.microsoft.com/microsoft-365/try?rtc=1) or [purchase a Microsoft 365 plan](https://www.microsoft.com/microsoft-365/buy/compare-all-microsoft-365-products).
+## 🗂 项目结构（节选）
 
-### Run the add-in using Office Add-ins Development Kit extension
+```
+manifest.xml            # 加载项清单
+package.json            # NPM 脚本与依赖
+webpack.config.js       # 打包配置
+src/
+    taskpane/
+        taskpane.html       # 任务窗格界面
+        taskpane.css        # 任务窗格样式
+        taskpane.js         # 业务逻辑与 Office API 调用
+    commands/             # 加载项命令（功能入口示例）
+assets/                 # 图标与静态资源
+```
 
-1. **Open the Office Add-ins Development Kit**
-    
-    In the **Activity Bar**, select the **Office Add-ins Development Kit** icon to open the extension.
+## 🚀 快速开始
 
-1. **Preview Your Office Add-in (F5)**
+### 1. 安装依赖
+```powershell
+npm install
+```
 
-    Select **Preview Your Office Add-in(F5)** to launch the add-in and debug the code. In the Quick Pick menu, select the option **PowerPoint Desktop (Edge Chromium)**.
+### 2. 开发调试（桌面版 PowerPoint）
+使用 VS Code 任务或直接执行：
+```powershell
+npm run start -- desktop --app powerpoint
+```
+脚本会启动本地服务器并自动侧载 (sideload) 加载项。首次运行若出现证书或权限提示，请按照终端指引操作。
 
-    The extension then checks that the prerequisites are met before debugging starts. Check the terminal for detailed information if there are issues with your environment. After this process, the PowerPoint desktop application launches and sideloads the add-in.
+### 3. 构建
+开发构建：
+```powershell
+npm run build:dev
+```
+生产构建：
+```powershell
+npm run build
+```
 
-1. **Stop Previewing Your Office Add-in**
+### 4. 停止调试
+```powershell
+npm run stop
+```
 
-    Once you are finished testing and debugging the add-in, select **Stop Previewing Your Office Add-in**. This closes the web server and removes the add-in from the registry and cache.
+## 🧪 试用步骤
+1. 打开 PowerPoint，确保加载项已侧载（任务窗格可见）。
+2. 在幻灯片上建立一个文本占位选区（比如点击一个文本框）。
+3. 在任务窗格点击“插入文本”。
+4. 观察选区与状态栏文字是否更新为带时间戳的内容。
 
-## Use the add-in project
+## 🛠 常用脚本速览
 
-The add-in project that you've created contains code for a basic task pane add-in.
+| 命令 | 作用 |
+|------|------|
+| `npm run start` | 启动调试并侧载清单 |
+| `npm run stop` | 停止调试并清理侧载 |
+| `npm run build:dev` | 开发模式打包（含 SourceMap） |
+| `npm run build` | 生产模式打包 |
+| `npm run watch` | 监听源码增量构建 |
+| `npm run lint` | 代码规范检查 |
+| `npm run lint:fix` | 自动修复可处理的问题 |
 
-## Explore the add-in code
+## 🔧 常见问题 (FAQ)
 
-To explore an Office add-in project, you can start with the key files listed below.
+**Q: 任务窗格没有显示？**  
+请确认 PowerPoint 已正确侧载，或重新运行 `npm run start` 并关闭所有旧的 PowerPoint 进程后再试。
 
-- The `./manifest.xml` file in the root directory of the project defines the settings and capabilities of the add-in.  <br>You can check whether your manifest file is valid by selecting **Validate Manifest File** option from the Office Add-ins Development Kit.
-- The `./src/taskpane/taskpane.html` file contains the HTML markup for the task pane.
-- The `./src/taskpane/taskpane.css` file contains the CSS that's applied to content in the task pane.
-- The `./src/taskpane/taskpane.js` file contains the Office JavaScript API code that facilitates interaction between the task pane and the PowerPoint application.
+**Q: 写入文本失败？**  
+确保当前焦点在可写入的文本形状/占位符中；某些对象（图片等）不可直接写入文本。
 
-## Troubleshooting
+**Q: 如何修改插入内容？**  
+编辑 `src/taskpane/taskpane.js` 中 `run()` 函数的 `content` 变量即可。
 
-If you have problems running the add-in, take these steps.
+## 📄 Manifest 清单提示
+修改 `manifest.xml` 后请重新侧载（停止再启动），并可执行：
+```powershell
+npm run validate
+```
+验证清单格式与必填字段。
 
-- Close any open instances of PowerPoint.
-- Close the previous web server started for the add-in with the **Stop Previewing Your Office Add-in** Office Add-ins Development Kit extension option.
+## 🧩 后续可扩展方向
+- 添加自定义功能按钮与 Ribbon 分组。
+- 与后端服务（Graph API 等）集成，动态获取内容。
+- 增加单元测试与更严谨的错误处理。
 
-If you still have problems, see [troubleshoot development errors](https://learn.microsoft.com//office/dev/add-ins/testing/troubleshoot-development-errors) or [create a GitHub issue](https://aka.ms/officedevkitnewissue) and we'll help you.  
+## 📜 许可证
+本项目采用 MIT License，详见仓库 LICENSE（若缺失可自行添加）。
 
-For information on running the add-in on PowerPoint on the web, see [Sideload Office Add-ins to Office on the web](https://learn.microsoft.com/office/dev/add-ins/testing/sideload-office-add-ins-for-testing).
+## 🙌 贡献 & 反馈
+欢迎 Fork 与提 Issue 改进项目。若需了解更多 Office 加载项开发，可参考官方文档：
+https://learn.microsoft.com/office/dev/add-ins/overview/office-add-ins
 
-For information on debugging on older versions of Office, see [Debug add-ins using developer tools in Microsoft Edge Legacy](https://learn.microsoft.com/office/dev/add-ins/testing/debug-add-ins-using-devtools-edge-legacy).
-
-## Make code changes
-
-All the information about Office Add-ins is found in our [official documentation](https://learn.microsoft.com/office/dev/add-ins/overview/office-add-ins). You can also explore more samples in the Office Add-ins Development Kit. Select **View Samples** to see more samples of real-world scenarios.
-
-If you edit the manifest as part of your changes, use the **Validate Manifest File** option in the Office Add-ins Development Kit. This shows you errors in the manifest syntax.
-
-## Engage with the team
-
-Did you experience any problems? [Create an issue](https://aka.ms/officedevkitnewissue) and we'll help you out.
-
-Want to learn more about new features and best practices for the Office platform? [Join the Microsoft Office Add-ins community call](https://learn.microsoft.com/office/dev/add-ins/overview/office-add-ins-community-call).
-
-## Copyright
-
-Copyright (c) 2024 Microsoft Corporation. All rights reserved.
-
-## Disclaimer
-
-**THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
+---
+更新说明：近期对任务窗格 UI 做了本地化与交互增强，并重写了本 README 以聚焦当前项目实际功能。

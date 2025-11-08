@@ -14,11 +14,17 @@ Office.onReady((info) => {
 });
 
 export async function run() {
-  /**
-   * Insert your PowerPoint code here
-   */
+  const statusEl = document.getElementById("status");
   const options = { coercionType: Office.CoercionType.Text };
+  const timestamp = new Date().toLocaleString();
+  const content = `Hello from e5-project @ ${timestamp}`;
 
-  await Office.context.document.setSelectedDataAsync(" ", options);
-  await Office.context.document.setSelectedDataAsync("Hello World!", options);
+  try {
+    statusEl.textContent = "正在写入文本...";
+    await Office.context.document.setSelectedDataAsync(content, options);
+    statusEl.textContent = `已插入: "${content}"`;
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "插入失败: " + err.message;
+  }
 }
