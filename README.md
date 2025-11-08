@@ -1,4 +1,5 @@
 # Build PowerPoint add-ins using Office Add-ins Development Kit
+Project: `e5-project` — sample PowerPoint Office Add-in (repository: https://github.com/a9215461/e5-project)
 
 PowerPoint add-ins are integrations built by third parties into PowerPoint by using [PowerPoint JavaScript API](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/overview/powerpoint-add-ins-reference-overview) and [Office Platform capabilities](https://learn.microsoft.com/en-us/office/dev/add-ins/overview/office-add-ins).
 
