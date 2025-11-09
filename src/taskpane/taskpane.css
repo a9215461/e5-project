@@ -88,3 +88,14 @@ b {
     box-sizing: border-box;
     word-break: break-all;
 }
+
+.action-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: center;
+}
+
+.preview-button {
+    background: #f3f2f1;
+}

@@ -44,9 +44,14 @@
                 <span class="ms-font-m">Create and visualize like a pro</span>
             </li>
         </ul>
-        <p class="ms-font-l">点击 <b>插入文本</b> 按钮，会把一段带时间戳的文本写入当前选中位置。</p>
-        <div role="button" id="run" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
-            <span class="ms-Button-label">插入文本</span>
+        <p class="ms-font-l">点击 <b>插入文本</b> 按钮，会把一段带时间戳的文本写入当前选中位置。你也可以先点击 <b>预览文本</b> 在状态区查看将要插入的内容。</p>
+        <div class="action-row">
+            <div role="button" id="run" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl">
+                <span class="ms-Button-label">插入文本</span>
+            </div>
+            <div role="button" id="preview" class="ms-welcome__action ms-Button ms-Button--hero ms-font-xl preview-button">
+                <span class="ms-Button-label">预览文本</span>
+            </div>
         </div>
         <p id="status" class="status-text ms-font-m" aria-live="polite">尚未执行。</p>
     </main>
