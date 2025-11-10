@@ -33,3 +33,14 @@ export function formatByTemplateId(id) {
   return formatMessage(t.text);
 }
 
+/**
+ * 返回当前可用模板的简短信息（id 与 title），方便在 UI 或测试中展示
+ */
+export function listTemplates() {
+  return templates.map((t) => ({ id: t.id, title: t.title }));
+}
+
+// 额外添加一个简洁的横幅模板，便于测试插入多行文本的效果
+templates.push({ id: "banner", title: "横幅模板", text: "=== 系统通知：{timestamp} ===" });
+
+
