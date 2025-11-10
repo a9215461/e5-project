@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage } from "./utils";
+import { formatMessage, templates, formatByTemplateId } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -19,6 +19,27 @@ Office.onReady((info) => {
     const previewBtn = document.getElementById("preview");
     if (previewBtn) {
       previewBtn.onclick = preview;
+    }
+
+    // 模板下拉与插入模板按钮
+    const tplSelect = document.getElementById("template-select");
+    if (tplSelect) {
+      // 填充模板选项
+      templates.forEach((t) => {
+        const opt = document.createElement("option");
+        opt.value = t.id;
+        opt.textContent = t.title;
+        tplSelect.appendChild(opt);
+      });
+      // 当选择变化时，自动更新预览
+      tplSelect.onchange = () => {
+        updatePreviewFromSelect();
+      };
+    }
+
+    const insertTplBtn = document.getElementById("insert-template");
+    if (insertTplBtn) {
+      insertTplBtn.onclick = insertTemplate;
     }
   }
 });
@@ -46,6 +67,37 @@ export async function run() {
  */
 export function preview() {
   const statusEl = document.getElementById("status");
-  const previewText = formatMessage("预览: Hello from e5-project");
+  // 如果存在模板下拉，则使用选中的模板来预览；否则使用简单的预览
+  const tplSelect = document.getElementById("template-select");
+  let previewText;
+  if (tplSelect && tplSelect.value) {
+    previewText = formatByTemplateId(tplSelect.value);
+  } else {
+    previewText = formatMessage("预览: Hello from e5-project");
+  }
   statusEl.textContent = `预览文本: "${previewText}"`;
+}
+
+/** 将所选模板插入到当前选区 */
+export async function insertTemplate() {
+  const statusEl = document.getElementById("status");
+  const tplSelect = document.getElementById("template-select");
+  const options = { coercionType: Office.CoercionType.Text };
+  const id = tplSelect && tplSelect.value ? tplSelect.value : "simple";
+  const content = formatByTemplateId(id);
+
+  try {
+    statusEl.textContent = "正在插入模板...";
+    await Office.context.document.setSelectedDataAsync(content, options);
+    statusEl.textContent = `已插入模板: "${content}"`;
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "模板插入失败: " + (err && err.message ? err.message : String(err));
+  }
+}
+
+function updatePreviewFromSelect() {
+  const previewBtn = document.getElementById("preview");
+  // 复用 preview 的逻辑，直接触发 preview 更新状态
+  if (previewBtn) preview();
 }
