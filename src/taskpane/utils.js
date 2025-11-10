@@ -43,4 +43,26 @@ export function listTemplates() {
 // 额外添加一个简洁的横幅模板，便于测试插入多行文本的效果
 templates.push({ id: "banner", title: "横幅模板", text: "=== 系统通知：{timestamp} ===" });
 
+/**
+ * 生成一个多行的示例块，包含行号与时间戳，便于测试插入多行文本行为。
+ * 返回字符串，默认生成 20 行变体，每行以行号开头。
+ */
+export function generateSampleBlock(lines = 20) {
+  const now = formatTimestamp(new Date());
+  const header = `示例块 — 生成于 ${now}`;
+  const parts = [header, ""]; // 空行分隔头部
+  for (let i = 1; i <= lines; i++) {
+    parts.push(`${i.toString().padStart(2, "0")}. 这是第 ${i} 行示例文本。`);
+  }
+  parts.push("\n--- 结束 ---");
+  return parts.join("\n");
+}
+
+/**
+ * 小工具：把模板列表转换成一段带索引的文本，方便在文档中直接查看可用模板
+ */
+export function templatesAsText() {
+  return templates.map((t, idx) => `${idx + 1}. ${t.title} (id=${t.id})`).join("\n");
+}
+
 

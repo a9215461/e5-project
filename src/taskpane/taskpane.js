@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage, templates, formatByTemplateId } from "./utils";
+import { formatMessage, templates, formatByTemplateId, generateSampleBlock } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -41,6 +41,10 @@ Office.onReady((info) => {
     if (insertTplBtn) {
       insertTplBtn.onclick = insertTemplate;
     }
+    const insertSampleBtn = document.getElementById("insert-sample");
+    if (insertSampleBtn) {
+      insertSampleBtn.onclick = insertSample;
+    }
   }
 });
 
@@ -59,6 +63,23 @@ export async function run() {
   } catch (err) {
     console.error(err);
     statusEl.textContent = "插入失败: " + (err && err.message ? err.message : String(err));
+  }
+}
+
+/** 插入由 generateSampleBlock 生成的多行示例文本 */
+export async function insertSample() {
+  const statusEl = document.getElementById("status");
+  const options = { coercionType: Office.CoercionType.Text };
+  // 生成 20 行示例文本
+  const content = generateSampleBlock(20);
+
+  try {
+    statusEl.textContent = "正在插入多行示例...";
+    await Office.context.document.setSelectedDataAsync(content, options);
+    statusEl.textContent = `已插入多行示例（共 20 行）`;
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "插入多行示例失败: " + (err && err.message ? err.message : String(err));
   }
 }
 
