@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage, templates, formatByTemplateId, generateSampleBlock } from "./utils";
+import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -45,6 +45,10 @@ Office.onReady((info) => {
     if (insertSampleBtn) {
       insertSampleBtn.onclick = insertSample;
     }
+    const insertIndexBtn = document.getElementById("insert-templates-index");
+    if (insertIndexBtn) {
+      insertIndexBtn.onclick = insertTemplatesIndex;
+    }
   }
 });
 
@@ -63,6 +67,22 @@ export async function run() {
   } catch (err) {
     console.error(err);
     statusEl.textContent = "插入失败: " + (err && err.message ? err.message : String(err));
+  }
+}
+
+/** 插入所有模板的索引/说明到当前选区，便于快速把模板参考写入文档 */
+export async function insertTemplatesIndex() {
+  const statusEl = document.getElementById("status");
+  const options = { coercionType: Office.CoercionType.Text };
+  const content = joinTemplatesWithSeparator("\n\n---\n\n");
+
+  try {
+    statusEl.textContent = "正在插入模板索引...";
+    await Office.context.document.setSelectedDataAsync(content, options);
+    statusEl.textContent = `已插入模板索引（共 ${templates.length} 个模板）`;
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "插入模板索引失败: " + (err && err.message ? err.message : String(err));
   }
 }
 

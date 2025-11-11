@@ -65,4 +65,22 @@ export function templatesAsText() {
   return templates.map((t, idx) => `${idx + 1}. ${t.title} (id=${t.id})`).join("\n");
 }
 
+/**
+ * 返回模板的统计信息：总数、最长标题长度等，便于在 UI 中展示统计数据。
+ */
+export function templatesInfo() {
+  const count = templates.length;
+  const longest = templates.reduce((acc, t) => Math.max(acc, t.title.length), 0);
+  const ids = templates.map((t) => t.id);
+  return { count, longestTitleLength: longest, ids };
+}
+
+/**
+ * 将所有模板合并为一个带分隔符的文本块，便于一次性插入文档作为参考。
+ */
+export function joinTemplatesWithSeparator(sep = "\n---\n") {
+  return templates.map((t) => `【${t.title}】\n${t.text}`).join(sep);
+}
+
+
 

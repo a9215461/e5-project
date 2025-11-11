@@ -131,3 +131,9 @@ b {
   background: #e7f4ff;
   border: 1px solid #c7e0f4;
 }
+
+.index-button {
+  margin-left: 8px;
+  background: #fff4e5;
+  border: 1px solid #ffd9a8;
+}
