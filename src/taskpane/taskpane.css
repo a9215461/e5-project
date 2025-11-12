@@ -137,3 +137,15 @@ b {
   background: #fff4e5;
   border: 1px solid #ffd9a8;
 }
+
+.copy-button {
+  margin-left: 8px;
+  background: #f6ffef;
+  border: 1px solid #d5f7c9;
+}
+
+.copy-success {
+  background: #e6f4ea;
+  border-left: 4px solid #60a05a;
+  padding: 8px 12px;
+}

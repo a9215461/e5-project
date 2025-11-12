@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator } from "./utils";
+import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -48,6 +48,10 @@ Office.onReady((info) => {
     const insertIndexBtn = document.getElementById("insert-templates-index");
     if (insertIndexBtn) {
       insertIndexBtn.onclick = insertTemplatesIndex;
+    }
+    const copyBtn = document.getElementById("copy-template");
+    if (copyBtn) {
+      copyBtn.onclick = copyCurrentTemplate;
     }
   }
 });
@@ -141,4 +145,40 @@ function updatePreviewFromSelect() {
   const previewBtn = document.getElementById("preview");
   // 复用 preview 的逻辑，直接触发 preview 更新状态
   if (previewBtn) preview();
+}
+
+/** 复制当前选中的模板文本到剪贴板 */
+export async function copyCurrentTemplate() {
+  const statusEl = document.getElementById("status");
+  const tplSelect = document.getElementById("template-select");
+  if (!tplSelect || !tplSelect.value) {
+    statusEl.textContent = "请先选择一个模板再复制。";
+    return;
+  }
+  const tpl = getTemplateById(tplSelect.value);
+  if (!tpl) {
+    statusEl.textContent = "未找到所选模板。";
+    return;
+  }
+  const text = formatMessage(tpl.text);
+  // 尝试使用 navigator.clipboard，回退到旧方法
+  try {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // 创建临时 textarea 回退
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    statusEl.textContent = "已复制模板到剪贴板。";
+    statusEl.classList.add('copy-success');
+    setTimeout(() => statusEl.classList.remove('copy-success'), 2500);
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "复制失败：" + (err && err.message ? err.message : String(err));
+  }
 }

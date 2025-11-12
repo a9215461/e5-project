@@ -82,5 +82,34 @@ export function joinTemplatesWithSeparator(sep = "\n---\n") {
   return templates.map((t) => `【${t.title}】\n${t.text}`).join(sep);
 }
 
+/**
+ * 根据 id 返回模板对象（包含 id/title/text），若找不到则返回 null
+ */
+export function getTemplateById(id) {
+  if (!id) return null;
+  return templates.find((t) => t.id === id) || null;
+}
+
+/**
+ * 返回模板集合的文本摘要，包含总数、每个模板的 title 与 id，便于在 README 或日志中输出。
+ */
+export function templatesSummary() {
+  const count = templates.length;
+  const list = templates.map((t, i) => `${i + 1}. ${t.title} (id=${t.id})`).join("\n");
+  return `模板总数: ${count}\n\n${list}`;
+}
+
+/**
+ * 确保某个 id 存在于模板中，若不存在则创建一个占位模板并返回该模板 id
+ */
+export function ensureTemplate(id, title = "自定义模板", text = "{timestamp}") {
+  let t = getTemplateById(id);
+  if (!t) {
+    t = { id, title, text };
+    templates.push(t);
+  }
+  return t;
+}
+
 
 
