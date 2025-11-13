@@ -111,5 +111,18 @@ export function ensureTemplate(id, title = "自定义模板", text = "{timestamp
   return t;
 }
 
+/**
+ * 将当前模板集合序列化为 JSON 字符串，便于导出或保存。
+ * 返回一个美化的 JSON 字符串。
+ */
+export function templatesAsJSON() {
+  try {
+    return JSON.stringify({ templates }, null, 2);
+  } catch (err) {
+    return JSON.stringify({ error: String(err) });
+  }
+}
+
+
 
 

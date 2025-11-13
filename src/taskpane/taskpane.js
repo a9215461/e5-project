@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById } from "./utils";
+import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById, templatesAsJSON } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -53,6 +53,10 @@ Office.onReady((info) => {
     if (copyBtn) {
       copyBtn.onclick = copyCurrentTemplate;
     }
+    const exportBtn = document.getElementById("export-templates");
+    if (exportBtn) {
+      exportBtn.onclick = exportTemplatesJson;
+    }
   }
 });
 
@@ -71,6 +75,27 @@ export async function run() {
   } catch (err) {
     console.error(err);
     statusEl.textContent = "插入失败: " + (err && err.message ? err.message : String(err));
+  }
+}
+
+/** 导出当前模板集合为 JSON 文件并触发下载 */
+export function exportTemplatesJson() {
+  const statusEl = document.getElementById("status");
+  try {
+    const json = templatesAsJSON();
+    const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "e5-project-templates.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    statusEl.textContent = "已生成模板导出文件。";
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "导出模板失败：" + (err && err.message ? err.message : String(err));
   }
 }
 

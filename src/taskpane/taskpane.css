@@ -149,3 +149,9 @@ b {
   border-left: 4px solid #60a05a;
   padding: 8px 12px;
 }
+
+.export-button {
+  margin-left: 8px;
+  background: #fff7ff;
+  border: 1px solid #f3d6f8;
+}
