@@ -81,6 +81,11 @@ npm run stop
 - 导出的 JSON 文件是一个包含 `templates` 数组的漂亮（pretty-printed）JSON，包含每个模板的 `id`、`title` 和 `text` 字段。
 - 下载会在浏览器/宿主环境中触发文件保存对话框；如果保存失败，请检查宿主对 blob/url 下载的支持。
 
+插入编号列表：
+
+- 新增“插入编号列表”按钮，用于在任务窗格中插入一段带序号的多行文本（默认 40 行），便于在 PowerPoint 中测试多行插入、换行与样式表现。
+- 如需修改数量，可在 `src/taskpane/taskpane.js` 中调整 `generateNumberedList` 的参数（默认在 UI 中是 40）。
+
 
 
 ## 🧪 试用步骤

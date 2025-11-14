@@ -112,6 +112,21 @@ export function ensureTemplate(id, title = "自定义模板", text = "{timestamp
 }
 
 /**
+ * 生成编号列表文本，每行带序号和时间戳，方便插入大量行进行格式验证。
+ * 默认生成 30 行，可通过参数调整数量。
+ */
+export function generateNumberedList(count = 30) {
+  const now = formatTimestamp(new Date());
+  const header = `编号列表（生成于 ${now}）`;
+  const lines = [header, ""]; // 空行后开始编号
+  for (let i = 1; i <= count; i++) {
+    lines.push(`${i}. 第 ${i} 项 — 生成时间：${now}`);
+  }
+  return lines.join("\n");
+}
+
+
+/**
  * 将当前模板集合序列化为 JSON 字符串，便于导出或保存。
  * 返回一个美化的 JSON 字符串。
  */

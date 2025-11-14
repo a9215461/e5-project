@@ -155,3 +155,9 @@ b {
   background: #fff7ff;
   border: 1px solid #f3d6f8;
 }
+
+.numbered-button {
+  margin-left: 8px;
+  background: #f0f7ff;
+  border: 1px solid #cfe6ff;
+}

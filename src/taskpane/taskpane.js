@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById, templatesAsJSON } from "./utils";
+import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById, templatesAsJSON, generateNumberedList } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -57,6 +57,10 @@ Office.onReady((info) => {
     if (exportBtn) {
       exportBtn.onclick = exportTemplatesJson;
     }
+    const insertNumberedBtn = document.getElementById("insert-numbered");
+    if (insertNumberedBtn) {
+      insertNumberedBtn.onclick = insertNumberedList;
+    }
   }
 });
 
@@ -96,6 +100,22 @@ export function exportTemplatesJson() {
   } catch (err) {
     console.error(err);
     statusEl.textContent = "导出模板失败：" + (err && err.message ? err.message : String(err));
+  }
+}
+
+/** 插入编号列表到当前选区 */
+export async function insertNumberedList() {
+  const statusEl = document.getElementById("status");
+  const options = { coercionType: Office.CoercionType.Text };
+  const content = generateNumberedList(40); // 生成 40 行，用于测试
+
+  try {
+    statusEl.textContent = "正在插入编号列表...";
+    await Office.context.document.setSelectedDataAsync(content, options);
+    statusEl.textContent = `已插入编号列表（共 40 行）`;
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "插入编号列表失败: " + (err && err.message ? err.message : String(err));
   }
 }
 
