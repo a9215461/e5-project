@@ -86,6 +86,13 @@ npm run stop
 - 新增“插入编号列表”按钮，用于在任务窗格中插入一段带序号的多行文本（默认 40 行），便于在 PowerPoint 中测试多行插入、换行与样式表现。
 - 如需修改数量，可在 `src/taskpane/taskpane.js` 中调整 `generateNumberedList` 的参数（默认在 UI 中是 40）。
 
+插入模板表格与示例日志：
+
+- 新增“插入模板表格”按钮，会把当前模板集合格式化为一个 Markdown 风格的表格并插入到当前选区，表格包含序号、模板 id、模板标题及示例文本（被截断以便展示）。
+- 插入动作同时会在表格后附加若干示例日志条目（默认 10 条），便于测试批量文本插入以及查阅日志的场景。
+- 该功能使用 `src/taskpane/utils.js` 中的 `templatesAsMarkdownTable()` 与 `generateLogEntries()` 方法生成文本；如需调整样式或样例长度，可在相应文件中修改参数。
+
+
 
 
 ## 🧪 试用步骤

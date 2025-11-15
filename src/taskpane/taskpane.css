@@ -161,3 +161,9 @@ b {
   background: #f0f7ff;
   border: 1px solid #cfe6ff;
 }
+
+.table-button {
+  margin-left: 8px;
+  background: #fffaf0;
+  border: 1px solid #ffe6c4;
+}

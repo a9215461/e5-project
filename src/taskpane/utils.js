@@ -125,6 +125,33 @@ export function generateNumberedList(count = 30) {
   return lines.join("\n");
 }
 
+/**
+ * 将模板集合格式化为 Markdown 表格，列：序号、id、title、样例文本（有限长度）。
+ * 用于把模板信息一次性插入到文档或导出为易读文本。
+ */
+export function templatesAsMarkdownTable(maxSampleLength = 60) {
+  const header = `| # | id | title | sample |\n|---:|:---|:---|:---|`;
+  const rows = templates.map((t, idx) => {
+    const sample = t.text.replace(/\n/g, ' \\n+ ').slice(0, maxSampleLength);
+    return `| ${idx + 1} | ${t.id} | ${t.title} | ${sample} |`;
+  });
+  return [header, ...rows].join('\n');
+}
+
+/**
+ * 生成一组时间序列日志条目，用于测试批量写入和查阅。
+ * 每条包含时间戳、级别和示例消息，count 可指定条目数。
+ */
+export function generateLogEntries(count = 25) {
+  const lines = [];
+  for (let i = 0; i < count; i++) {
+    const d = new Date(Date.now() - (count - i) * 1000 * 60);
+    lines.push(`${formatTimestamp(d)} [INFO] 示例日志条目 #${i + 1}：这是第 ${i + 1} 条日志。`);
+  }
+  return lines.join('\n');
+}
+
+
 
 /**
  * 将当前模板集合序列化为 JSON 字符串，便于导出或保存。

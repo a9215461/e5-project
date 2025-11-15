@@ -4,7 +4,7 @@
  */
 
 /* global document, Office */
-import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById, templatesAsJSON, generateNumberedList } from "./utils";
+import { formatMessage, templates, formatByTemplateId, generateSampleBlock, joinTemplatesWithSeparator, getTemplateById, templatesAsJSON, generateNumberedList, templatesAsMarkdownTable, generateLogEntries } from "./utils";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.PowerPoint) {
@@ -61,6 +61,10 @@ Office.onReady((info) => {
     if (insertNumberedBtn) {
       insertNumberedBtn.onclick = insertNumberedList;
     }
+    const insertTableBtn = document.getElementById("insert-templates-table");
+    if (insertTableBtn) {
+      insertTableBtn.onclick = insertTemplatesTable;
+    }
   }
 });
 
@@ -79,6 +83,24 @@ export async function run() {
   } catch (err) {
     console.error(err);
     statusEl.textContent = "插入失败: " + (err && err.message ? err.message : String(err));
+  }
+}
+
+/** 插入模板表格（Markdown 格式）到当前选区 */
+export async function insertTemplatesTable() {
+  const statusEl = document.getElementById("status");
+  const options = { coercionType: Office.CoercionType.Text };
+  const table = templatesAsMarkdownTable(80);
+  const logs = generateLogEntries(10);
+  const content = `模板表格：\n\n${table}\n\n示例日志（最近 10 条）：\n${logs}`;
+
+  try {
+    statusEl.textContent = "正在插入模板表格...";
+    await Office.context.document.setSelectedDataAsync(content, options);
+    statusEl.textContent = `已插入模板表格与示例日志（共 ${templates.length} 个模板）`;
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = "插入模板表格失败: " + (err && err.message ? err.message : String(err));
   }
 }
 
